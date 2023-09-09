@@ -10,8 +10,11 @@ services:
     command: >
       sh -c "python manage.py makemigrations && python manage.py migrate &&
       python manage.py collectstatic --noinput &&
+      python -m celery -A celery -A producer_consumer worker -l info --detach -f celery.logs &&
+      python -m celery -A producer_consumer beat -l info --detach -f celerybeat.logs &&
       gunicorn producer_consumer.wsgi:application --bind '0.0.0.0:8000'"
     depends_on:
+      - redis
       - db
     volumes:
       - producer_consumer_static_volume:/producer_consumer/static
@@ -20,6 +23,16 @@ services:
     networks:
       - OrdersNetwork
   
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+    networks:
+      - OrdersNetwork
+
   db:
     image: postgres:15-alpine
     env_file:
@@ -44,6 +57,7 @@ services:
       - OrdersNetwork
 
 volumes:
+  redis:
   db-volume:
   producer_consumer_static_volume:
 
