@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  producer_consumer:
+    build: .
+    container_name: producer_consumer
+    restart: always
+    expose:
+      - 8000
+    command: >
+      sh -c "python manage.py makemigrations && python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn producer_consumer.wsgi:application --bind '0.0.0.0:8000'"
+    depends_on:
+      - db
+    volumes:
+      - producer_consumer_static_volume:/producer_consumer/static
+    env_file:
+      - ./.env
+    networks:
+      - OrdersNetwork
+  
+  db:
+    image: postgres:15-alpine
+    env_file:
+      - ./.env
+    restart: always
+    expose:
+      - 5436
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    networks:
+      - OrdersNetwork
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 8005:80
+    depends_on:
+      - producer_consumer
+    volumes:
+      - producer_consumer_static_volume:/producer_consumer/static
+    networks:
+      - OrdersNetwork
+
+volumes:
+  db-volume:
+  producer_consumer_static_volume:
+
+networks:
+  OrdersNetwork:
+    driver: bridge
