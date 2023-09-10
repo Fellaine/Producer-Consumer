@@ -8,8 +8,15 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 	</head>
 	<body>
-		<h1 class="text-center">Orders</h1>
-		{% comment %} <div class="card-group" style="margin-top: 5rem;"> {% endcomment %}
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <h1 class="navbar-brand">Orders</h1>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-dark" type="submit">Logout</button>
+                </form>
+            </div>
+        </nav>
 		<div class="text-center">
 			{% for order in object_list %}
 			<div class="d-flex m-2">
