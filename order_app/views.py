@@ -29,7 +29,7 @@ class OrderDeleteView(DeleteView):
         # employee = f"{order.user.username} {order.user.position}"
         employee = f"{self.request.user.username} {self.request.user.position}"
         time_date = datetime.now().strftime("%H:%M %d/%m/%Y")
-        response = f"Message №{order.pk} - {order.task_id} named {order.name} \
+        response = f"Order №{order.pk} - {order.task_id} named {order.name} \
                     was processed by {employee} at {time_date}"
         order.delete()
         return HttpResponse(response)
