@@ -13,7 +13,7 @@ def make_order():
         task_id="1",
         name=f"Test name {order_number}",
         description="Test description",
-        user=random_user,
+        employee=random_user,
     )
     new_order.save()
     return "Successfully added new order"

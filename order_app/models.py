@@ -13,4 +13,4 @@ class Order(models.Model):
     task_id = models.TextField(null=False, blank=False)
     name = models.TextField(null=False, blank=False)
     description = models.TextField(null=False, blank=False)
-    user = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)

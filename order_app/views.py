@@ -18,7 +18,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         if self.request.user.is_anonymous:
             queryset = Order.objects.none()
         else:
-            queryset = Order.objects.filter(user=current_user)
+            queryset = Order.objects.filter(employee=current_user)
         return queryset
 
 
@@ -28,7 +28,7 @@ class OrderDeleteView(DeleteView):
 
     def form_valid(self, form):
         order = self.get_object()
-        # employee = f"{order.user.username} {order.user.position}"
+        # employee = f"{order.employee.username} {order.user.position}"
         employee = f"{self.request.user.username} {self.request.user.position}"
         time_date = datetime.now().strftime("%H:%M %d/%m/%Y")
         response = f"Order №{order.pk} - {order.task_id} named {order.name} \
