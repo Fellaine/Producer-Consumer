@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse
 from django.views.generic import DeleteView, ListView
 
@@ -8,7 +10,7 @@ from .models import Order
 # Create your views here.
 
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     model = Order
 
     def get_queryset(self):
@@ -33,3 +35,7 @@ class OrderDeleteView(DeleteView):
                     was processed by {employee} at {time_date}"
         order.delete()
         return HttpResponse(response)
+
+
+class OrderLoginView(LoginView):
+    success_url = "/"

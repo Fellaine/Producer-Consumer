@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from order_app.views import OrderDeleteView, OrderListView
+from order_app.views import OrderDeleteView, OrderListView, OrderLoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", OrderListView.as_view()),
     path("delete/<int:pk>/", OrderDeleteView.as_view()),
+    path("login/", OrderLoginView.as_view(), name="login"),
 ]
