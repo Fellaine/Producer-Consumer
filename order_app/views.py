@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.http import HttpResponse
 from django.views.generic import DeleteView, ListView
 
 from .models import Order
@@ -19,4 +22,14 @@ class OrderListView(ListView):
 
 class OrderDeleteView(DeleteView):
     model = Order
-    success_url = "/"
+    # success_url = "/"
+
+    def form_valid(self, form):
+        order = self.get_object()
+        # employee = f"{order.user.username} {order.user.position}"
+        employee = f"{self.request.user.username} {self.request.user.position}"
+        time_date = datetime.now().strftime("%H:%M %d/%m/%Y")
+        response = f"Message №{order.pk} - {order.task_id} named {order.name} \
+                    was processed by {employee} at {time_date}"
+        order.delete()
+        return HttpResponse(response)
