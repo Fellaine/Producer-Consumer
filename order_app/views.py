@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse
 from django.views.generic import DeleteView, ListView
 
@@ -26,7 +26,7 @@ class OrderDeleteView(DeleteView):
     model = Order
     # success_url = "/"
 
-    def form_valid(self, form):
+    def form_valid(self, form):  # proper way since django 4.0+
         order = self.get_object()
         # employee = f"{order.employee.username} {order.user.position}"
         employee = f"{self.request.user.username} {self.request.user.position}"
@@ -39,3 +39,7 @@ class OrderDeleteView(DeleteView):
 
 class OrderLoginView(LoginView):
     success_url = "/"
+
+
+class OrderLogoutView(LogoutView):
+    next_page = "/"  # so users aren't left at default admin logout page
