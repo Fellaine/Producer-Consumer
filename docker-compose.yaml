@@ -9,7 +9,7 @@ services:
       - 8000
     command: >
       sh -c "python manage.py makemigrations && python manage.py migrate &&
-      python manage.py collectstatic --noinput &&
+      python manage.py create_initial_users && python manage.py collectstatic --noinput &&
       python -m celery -A celery -A producer_consumer worker -l info --detach -f celery.logs &&
       python -m celery -A producer_consumer beat -l info --detach -f celerybeat.logs &&
       gunicorn producer_consumer.wsgi:application --bind '0.0.0.0:8000'"
